@@ -25,6 +25,7 @@ int main() {
 	Course* tail = NULL;
 	int tailIndex = 0;
 
+	//create linked list
 	while (cin >> nextVal) {
 		Course* node = new Course(nextVal);
 		Course* last = head;
@@ -53,7 +54,9 @@ int main() {
 
 	switch (task) {
 		case 0: {
-			cout << binarySearch(head, key, 0, tailIndex) << endl;
+			//output binary search result
+			cout << binarySearch(head, key, 0, tailIndex);
+			break;
 		}
 		case 1: {
 			int index = binarySearch(head, key, 0, tailIndex);
@@ -118,6 +121,7 @@ int main() {
 					cout << node->capacity << ' ';
 					node = node->ptr_next;
 				}
+				break;
 			}
 		}
 	}
