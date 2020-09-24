@@ -3,11 +3,34 @@
 using namespace std;
 
 class Course {
-public:
+private:
 	int capacity;
 	Course* ptr_prev;
 	Course* ptr_next;
-	Course(int capacity);
+public:
+	Course* getPrev() {
+		return ptr_prev;
+	}
+	Course* getNext() {
+		return ptr_next;
+	}
+	int getCapacity() {
+		return capacity;
+	}
+	void setPrev(Course* ptr_prev) {
+		this->ptr_prev = ptr_prev;
+	}
+	void setNext(Course* ptr_next) {
+		this->ptr_next = ptr_next;
+	}
+	void setCapacity(int capacity) {
+		this->capacity = capacity;
+	}
+	Course(int capacity) {
+		this->capacity = capacity;
+		ptr_prev = NULL;
+		ptr_next = NULL;
+	}
 };
 
 int binarySearch(Course* head, int key, int front, int end);
@@ -40,12 +63,12 @@ int main() {
 
 		//loop through current list until we reach a node where
 		//the next pointer is null
-		while (last->ptr_next != NULL) {
-			last = last->ptr_next;
+		while (last->getNext() != NULL) {
+			last = last->getNext();
 		}
 		//add the new node to the list
-		last->ptr_next = node;
-		node->ptr_prev = last;
+		last->setNext(node);
+		node->setPrev(last);
 
 		//set the tail pointer to the new node
 		tail = node;
@@ -65,61 +88,61 @@ int main() {
 				Course* node = head;
 				while (node != NULL) {
 					//if the node we're at is greater than the key
-					if (node->capacity > key) {
+					if (node->getCapacity() > key) {
 						//create new node with key
 						Course* new_node = new Course(key);
 						
 						//initialize pointers on new node
-						new_node->ptr_next = node;
-						new_node->ptr_prev = node->ptr_prev;
+						new_node->setNext(node);
+						new_node->setPrev(node->getPrev());
 
 						//configure pointers on nodes before and after
-						node->ptr_prev->ptr_next = new_node;
-						node->ptr_prev = new_node;
+						node->getPrev()->setNext(new_node);
+						node->setPrev(new_node);
 						
 						//insertion complete, end loop
 						break;
 					}
 
-					node = node->ptr_next;
+					node = node->getNext();
 				}
 
 				node = head;
 				while (node != NULL) {
-					cout << node->capacity << ' ';
-					node = node->ptr_next;
+					cout << node->getCapacity() << ' ';
+					node = node->getNext();
 				}
 			}
 			//if in list, perform deletion
 			else {
 				Course* node = head;
 				while (node != NULL) {
-					if (node->capacity == key) {
+					if (node->getCapacity() == key) {
 						//if the node to be deleted is head
 						if (node == head) {
-							head = node->ptr_next;
+							head = node->getNext();
 						}
 
 						//change next
-						if (node->ptr_next != NULL) {
-							node->ptr_next->ptr_prev = node->ptr_prev;
+						if (node->getNext() != NULL) {
+							node->getNext()->setPrev(node->getPrev());
 						}
 
 						//change prev
-						if (node->ptr_prev != NULL) {
-							node->ptr_prev->ptr_next = node->ptr_next;
+						if (node->getPrev() != NULL) {
+							node->getPrev()->setNext(node->getNext());
 						}
 
 						//deletion completed, end loop
 						break;
 					}
-					node = node->ptr_next;
+					node = node->getNext();
 				}
 
 				node = head;
 				while (node != NULL) {
-					cout << node->capacity << ' ';
-					node = node->ptr_next;
+					cout << node->getCapacity() << ' ';
+					node = node->getNext();
 				}
 				break;
 			}
@@ -127,12 +150,6 @@ int main() {
 	}
 
 	return 0;
-}
-
-Course::Course(int capacity) {
-	this->capacity = capacity;
-	ptr_prev = NULL;
-	ptr_next = NULL;
 }
 
 int binarySearch(Course* head, int key, int front, int end) {
@@ -143,13 +160,13 @@ int binarySearch(Course* head, int key, int front, int end) {
 	//find the node at the midpoint
 	Course* temp = head;
 	for (int i = 0; i < midpoint; i++) {
-		temp = temp->ptr_next;
+		temp = temp->getNext();
 	}
 
-	if (key == temp->capacity)
+	if (key == temp->getCapacity())
 		return midpoint;
-	else if (key < temp->capacity)
+	else if (key < temp->getCapacity())
 		return binarySearch(head, key, front, midpoint - 1);
-	else if (key > temp->capacity)
+	else if (key > temp->getCapacity())
 		return binarySearch(head, key, midpoint + 1, end);
 }
